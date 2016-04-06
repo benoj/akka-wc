@@ -9,7 +9,7 @@ import scala.collection.mutable.ArrayBuffer
 
 class AggregateActor extends Actor {
 
-  val map = new mutable.HashMap[String, Int]
+  private val map = new mutable.HashMap[String, Int]
 
   private def aggregate(data: Map[String, Int]): Unit = {
     for((key,value) <- data) {
@@ -22,8 +22,9 @@ class AggregateActor extends Actor {
     }
   }
 
-  override protected def receive: Receive = {
-    case ReduceData(data) => aggregate(data)
-    case Result => sender ! map.toString
+  override def receive: Receive = {
+    case ReduceData(data) =>aggregate(data)
+    case Result => sender ! map.toString()
+
   }
 }

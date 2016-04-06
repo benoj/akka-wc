@@ -18,7 +18,7 @@ class ReduceActor extends Actor {
     ReduceData(map)
   }
 
-  override protected def receive: Receive = {
+  override def receive: Receive = {
     case MapData(data) => sender ! reduce(data)
   }
 }

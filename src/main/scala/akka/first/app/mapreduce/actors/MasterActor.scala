@@ -1,19 +1,17 @@
 package akka.first.app.mapreduce.actors
 
 import akka.actor.{Actor, Props}
-import akka.first.app.mapreduce.{MapData, ReduceData, Result, WordCount}
-import akka.routing.RoundRobinRouter
-
-import scala.collection.mutable.ArrayBuffer
+import akka.first.app.mapreduce.{MapData, ReduceData, Result}
+import akka.routing.RoundRobinPool
 
 
 class MasterActor extends Actor {
 
-  val mapActor = context.actorOf(Props[MapActor].withRouter(RoundRobinRouter(5)), "map")
-  val reduceActor = context.actorOf(Props[ReduceActor].withRouter(RoundRobinRouter(5)), "reduce")
-  val aggregateActor = context.actorOf(Props[AggregateActor].withRouter(RoundRobinRouter(5)), "aggregate")
+  val mapActor = context.actorOf(Props[MapActor].withRouter(RoundRobinPool(5)), "map")
+  val reduceActor = context.actorOf(Props[ReduceActor].withRouter(RoundRobinPool(5)), "reduce")
+  val aggregateActor = context.actorOf(Props[AggregateActor], "aggregate")
 
-  override protected def receive: Receive = {
+  override def receive: Receive = {
     case line: String => mapActor ! line
     case mapData: MapData => reduceActor ! mapData
     case reduceData: ReduceData => aggregateActor ! reduceData

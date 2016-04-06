@@ -17,7 +17,7 @@ class MapActor extends Actor {
     MapData(words)
   }
 
-  override protected def receive: Receive = {
+  override def receive: Receive = {
     case message: String => sender ! evaluateExpression(message)
   }
 }
