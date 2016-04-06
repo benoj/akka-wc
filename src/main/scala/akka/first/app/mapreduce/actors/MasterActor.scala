@@ -1,7 +1,7 @@
 package akka.first.app.mapreduce.actors
 
 import akka.actor.{Actor, Props}
-import akka.first.app.mapreduce.{MapData, ReduceData, WordCount}
+import akka.first.app.mapreduce.{MapData, ReduceData, Result, WordCount}
 import akka.routing.RoundRobinRouter
 
 import scala.collection.mutable.ArrayBuffer
@@ -15,6 +15,8 @@ class MasterActor extends Actor {
 
   override protected def receive: Receive = {
     case line: String => mapActor ! line
-    case 
+    case mapData: MapData => reduceActor ! mapData
+    case reduceData: ReduceData => aggregateActor ! reduceData
+    case Result => aggregateActor forward Result
   }
 }
